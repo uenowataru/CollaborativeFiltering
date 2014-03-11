@@ -23,8 +23,8 @@ class CollaborativeFiltering:
 			sumratings = 0.0
 			counter = 0
 			for j in range(self.num_items):
-				if (ratings[i][j] > 0):
-					sumratings += ratings[i][j]
+				if (self.ratings[i][j] > 0):
+					sumratings += self.ratings[i][j]
 					counter+=1
 			if counter > 0:
 				self.user_means[i] =  sumratings/counter
@@ -51,13 +51,12 @@ class CollaborativeFiltering:
 					sigmaA = 0.0
 					sigmaB = 0.0
 					for k in commonitems:
-						numA = ratings[i][k] - avgr_i
-						numB = ratings[j][k] - avgr_j
-						sigmaA += numA * numA
-						sigmaB += numB * numB
-						covariance += numA * numB
+						devA = ratings[i][k] - avgr_i
+						devB = ratings[j][k] - avgr_j
+						sigmaA += devA * devA
+						sigmaB += devB * devB
+						covariance += devA * devB
 					sigmas = math.sqrt(sigmaA) * math.sqrt(sigmaB)
-					#print sigmas, commonitems
 					if(sigmas != 0):
 						self.weights[i][j] = covariance / sigmas
 					else:
@@ -88,9 +87,19 @@ class CollaborativeFiltering:
 
 
 if __name__ == "__main__":
+	'''
 	ratings = [[4,3,3,3,2], [4,3,3,3,0], [4,2,2,0,5], [4,1,1,1,1]]
 	cf = CollaborativeFiltering(ratings)
 	print "prediction(1,4):",cf.getPredictions(1, 4), "should equal 3.3"
-	print "prediction(2,3):",cf.getPredictions(2, 3), "should equal 2.96.."
+	print "prediction(2,3):",cf.getPredictions(2, 3), "should equal 2.96.." 
+	'''
 
+	ratings2 = [[7, 5, 3, 1, 1, 0],
+		[1, 3, 10, 7, 1, 0],
+		[0, 0, 6, 11, 0, 0],
+		[5, 7, 0, 0, 8, 8],
+		[6, 4, 0, 0, 5, 1]]
+	cf = CollaborativeFiltering(ratings2)
+	
+	print [cf.getPredictions(0,i) for i in range(len(ratings2[0]))]
 
