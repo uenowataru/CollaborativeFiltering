@@ -73,33 +73,44 @@ class CollaborativeFiltering:
 		predictions = self.predictions
 
 		for i in range(num_users):
-			for j in range(num_items):
+			for m in range(num_items):
 				sumdeviation = 0.0
 				sumweights = 0.0
-				for k in range(num_users):
-					if(k!=i and ratings[k][j] != 0):
-						residual = ratings[k][j] - user_means[k]
-						sumdeviation += residual * weights[i][k]
-						sumweights += math.fabs(weights[i][k])
-				predictions[i][j] = user_means[i]
+				for j in range(num_users):
+					if(j!=i and ratings[j][m] != 0 and ratings[i][m]!=0):
+						residual = ratings[j][m] -  user_means[j]
+						sumdeviation += residual * weights[i][j]
+						sumweights += math.fabs(weights[i][j])
+				predictions[i][m] = user_means[i]
 				if(sumweights > 0):
-					predictions[i][j] += sumdeviation / sumweights
+					predictions[i][m] += sumdeviation / sumweights
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
-	'''
+	
 	ratings = [[4,3,3,3,2], [4,3,3,3,0], [4,2,2,0,5], [4,1,1,1,1]]
 	cf = CollaborativeFiltering(ratings)
-	print "prediction(1,4):",cf.getPredictions(1, 4), "should equal 3.3"
-	print "prediction(2,3):",cf.getPredictions(2, 3), "should equal 2.96.." 
+	print "prediction(1,4):",cf.getPredictions(1, 4), "should equal 3.25"
+	print "prediction(2,3):",cf.getPredictions(3, 3), "should equal 1.46.." 
 	'''
-
-	ratings2 = [[7, 5, 3, 1, 1, 0],
-		[1, 3, 10, 7, 1, 0],
-		[0, 0, 6, 11, 0, 0],
-		[5, 7, 0, 0, 8, 8],
-		[6, 4, 0, 0, 5, 1]]
+	ratings2 = [[5, 2, 5, 5, 1, 0],
+		[3, 3, 3, 3, 3, 3],
+		[2, 4, 3, 3, 4, 4],
+		[2, 3, 2, 3, 2, 5],
+		[5, 3, 5, 5, 5, 2]]
 	cf = CollaborativeFiltering(ratings2)
 	
 	print [cf.getPredictions(0,i) for i in range(len(ratings2[0]))]
-
+	'''
